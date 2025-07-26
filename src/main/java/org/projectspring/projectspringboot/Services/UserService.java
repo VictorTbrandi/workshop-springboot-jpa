@@ -1,5 +1,6 @@
 package org.projectspring.projectspringboot.Services;
 
+import org.projectspring.projectspringboot.Services.exceptions.ResourceNotFoundException;
 import org.projectspring.projectspringboot.entities.User;
 import org.projectspring.projectspringboot.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class UserService {
 
     public User findById(Long id) {
         Optional<User> user = userRepository.findById(id);
-        return user.get();
+        return user.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     public User insert(User user) {
