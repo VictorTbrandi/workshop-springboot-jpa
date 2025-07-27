@@ -1,5 +1,6 @@
 package org.projectspring.projectspringboot.Services;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.projectspring.projectspringboot.Services.exceptions.DatabaseException;
 import org.projectspring.projectspringboot.Services.exceptions.ResourceNotFoundException;
@@ -44,9 +45,15 @@ public class UserService {
     }
 
     public User update(Long id, User user) {
-        User entity = userRepository.getReferenceById(id);
-        updateData(entity, user);
-        return userRepository.save(entity);
+        try {
+            User entity = userRepository.getReferenceById(id);
+            updateData(entity, user);
+            return userRepository.save(entity);
+        }
+        catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
+        }
+
     }
 
     private void updateData(User entity, User user) {
